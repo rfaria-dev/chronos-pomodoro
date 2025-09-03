@@ -1,16 +1,19 @@
 import "./style/theme.css";
 import "./style/global.css";
-import { Heading } from "./components/Heading";
+
+import { Container } from "./components/container";
+import { Heading } from "./components/heading";
+import { Logo } from "./components/logo";
 
 function App() {
 	return (
 		<>
-			<Heading />
-			<div className="p">
-				Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sit, neque eos
-				ad dolorum rem nostrum blanditiis earum quos est quo, necessitatibus
-				dolorem et esse sed quia dicta autem tenetur labore!
-			</div>
+			<Container>
+				<Logo />
+			</Container>
+			<Container>
+				<Heading>MENU</Heading>
+			</Container>
 		</>
 	);
 }
