@@ -1,31 +1,27 @@
 import "./styles/theme.css";
 import "./styles/global.css";
-
-import { Container } from "./components/container";
-import { Logo } from "./components/logo";
-import { Menu } from "./components/menu";
-import { CountDown } from "./components/count-down";
-import { Form } from "./components/form";
-import { Footer } from "./components/footer";
+import { Home } from "./components/pages/home/home";
+import { useState } from "react";
+import type { TaskStateModel } from "./models/task-state-model";
 
 function App() {
+	const initialState: TaskStateModel = {
+		tasks: [],
+		secondsRemaining: 0,
+		formattedSecondsRemaining: "00:00",
+		activeTask: null,
+		currentCycle: 0,
+		config: {
+			workTime: 25,
+			shortBreakTime: 5,
+			longBreakTime: 15,
+		},
+	};
+
+	const [state, setState] = useState(initialState);
 	return (
 		<>
-			<Container>
-				<Logo />
-			</Container>
-			<Container>
-				<Menu />
-			</Container>
-			<Container>
-				<CountDown />
-			</Container>
-			<Container>
-				<Form />
-			</Container>
-			<Container>
-				<Footer />
-			</Container>
+			<Home state={state} setState={setState} />
 		</>
 	);
 }
