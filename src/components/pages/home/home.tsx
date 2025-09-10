@@ -1,25 +1,19 @@
-import type { TaskStateModel } from "../../../models/task-state-model";
 import { Container } from "../../container";
 import { CountDown } from "../../count-down";
 import { Form } from "../../form";
 import { Template } from "../../templates/main-template/template";
 
-type HomeProps = {
-	state: TaskStateModel;
-	setState: React.Dispatch<React.SetStateAction<TaskStateModel>>;
-};
-const Home = (props: HomeProps) => {
+const Home = () => {
 	return (
 		<Template>
 			<Container>
-				<CountDown {...props} />
+				<CountDown />
 			</Container>
 			<Container>
-				<Form {...props} />
+				<Form />
 			</Container>
 		</Template>
 	);
 };
 
 export { Home };
-export type { HomeProps };
