@@ -1,0 +1,7 @@
+useRef e usado para evitar renderizacoes desnecessarias,
+ por exemplo quando temos digitacao em inputs de form,
+  se usar o useRef com a prop ref no componente `ref{}`
+  o componente so sera renderizado apos o clique
+
+
+  

@@ -1,12 +1,56 @@
-import { PlayCircleIcon } from "lucide-react";
+import { PauseCircleIcon, PlayCircleIcon, StopCircleIcon } from "lucide-react";
 import { Button } from "../button";
 import { Cycles } from "../cycles";
 import { Input } from "../input";
+import { useRef } from "react";
+import type { TaskModel } from "../../models/task-model";
+import { useTaskContext } from "../../contexts/task-context/use-task-context";
+import { getNextCycle } from "../../utils/getNextCycle";
+import { getNextCycleType } from "../../utils/getNextCycleType";
+import { formatSecondsToMinutes } from "../../utils/formatSecondsToMinutes";
 
 const Form = () => {
+	const { state, setState } = useTaskContext();
+	const taskNameInput = useRef<HTMLInputElement>(null);
+	const nextCycle = getNextCycle(state.currentCycle);
+	const nextCycleType = getNextCycleType(nextCycle);
+
 	const handleCreateNewTask = (event: React.FormEvent<HTMLFormElement>) => {
-		console.log("Logged!");
 		event.preventDefault();
+
+		if (taskNameInput.current === null) {
+			return;
+		}
+		const taskName = taskNameInput.current.value.trim();
+		console.log(taskName);
+		if (!taskName) {
+			alert("Digite o nome da tarefa");
+			return;
+		}
+
+		const newTask: TaskModel = {
+			id: Date.now().toString(),
+			name: taskName,
+			duration: state.config[nextCycleType],
+			startDate: Date.now(),
+			completeDate: null,
+			interruptDate: null,
+			type: nextCycleType,
+		};
+
+		const secondsRemaining = newTask.duration * 60;
+
+		setState((prevState) => {
+			return {
+				...prevState,
+				activeTask: newTask,
+				currentCycle: nextCycle,
+				secondsRemaining,
+				formattedSecondsRemaining: formatSecondsToMinutes(secondsRemaining),
+				task: [...prevState.tasks, newTask],
+				config: { ...prevState.config },
+			};
+		});
 	};
 
 	return (
@@ -18,6 +62,8 @@ const Form = () => {
 					type="text"
 					labelText="task"
 					title="Titulo"
+					ref={taskNameInput}
+					disabled={!!state.activeTask}
 				/>
 			</div>
 			<div className="formRow">
@@ -25,7 +71,23 @@ const Form = () => {
 			</div>
 			<Cycles />
 			<div className="formRow">
-				<Button color="red" icon={<PlayCircleIcon />} />
+				{!state.activeTask && (
+					<Button
+						aria-label="iniciar nova tarefa"
+						title="iniciar nova tarefa"
+						type="submit"
+						icon={<PlayCircleIcon />}
+					/>
+				)}
+				{state.activeTask && (
+					<Button
+						aria-label="Interromper nova tarefa"
+						title="Interromper nova tarefa"
+						type="button"
+						icon={<StopCircleIcon />}
+						color="red"
+					/>
+				)}
 			</div>
 		</form>
 	);
