@@ -1,4 +1,4 @@
-import { PauseCircleIcon, PlayCircleIcon, StopCircleIcon } from "lucide-react";
+import { PlayCircleIcon, StopCircleIcon } from "lucide-react";
 import { Button } from "../button";
 import { Cycles } from "../cycles";
 import { Input } from "../input";
@@ -22,7 +22,7 @@ const Form = () => {
 			return;
 		}
 		const taskName = taskNameInput.current.value.trim();
-		console.log(taskName);
+
 		if (!taskName) {
 			alert("Digite o nome da tarefa");
 			return;
@@ -47,8 +47,26 @@ const Form = () => {
 				currentCycle: nextCycle,
 				secondsRemaining,
 				formattedSecondsRemaining: formatSecondsToMinutes(secondsRemaining),
-				task: [...prevState.tasks, newTask],
+				tasks: [...prevState.tasks, newTask],
 				config: { ...prevState.config },
+			};
+		});
+	};
+
+	const handleInterruptTask = () => {
+		setState((prevState) => {
+			console.log("prevState.tasks: ", prevState.tasks);
+			return {
+				...prevState,
+				activeTask: null,
+				secondsRemaining: 0,
+				formattedSecondsRemaining: "00:00",
+				tasks: prevState.tasks.map((task) => {
+					if (prevState.activeTask && prevState.activeTask.id === task.id) {
+						return { ...task, interruptDate: Date.now() };
+					}
+					return task;
+				}),
 			};
 		});
 	};
@@ -86,6 +104,7 @@ const Form = () => {
 						type="button"
 						icon={<StopCircleIcon />}
 						color="red"
+						onClick={() => handleInterruptTask()}
 					/>
 				)}
 			</div>
